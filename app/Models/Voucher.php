@@ -84,4 +84,14 @@ class Voucher extends Model
     {
         return $this->discountTier->percent;
     }
+    
+    /**
+     * Check if voucher expired
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return time() > $this->end_date->timestamp;
+    }
 }

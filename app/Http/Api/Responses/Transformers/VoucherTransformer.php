@@ -8,7 +8,7 @@ use League\Fractal\TransformerAbstract;
 class VoucherTransformer extends TransformerAbstract
 {
     protected $defaultIncludes = [
-        'discountTiers'
+        'discountTier'
     ];
     
     public function transform(Voucher $voucher)
@@ -20,7 +20,7 @@ class VoucherTransformer extends TransformerAbstract
         ];
     }
     
-    public function includeDiscountTiers(Voucher $voucher)
+    public function includeDiscountTier(Voucher $voucher)
     {
         $discountTier = $voucher->discountTier;
         

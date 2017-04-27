@@ -26,7 +26,7 @@ $factory->define(App\Models\Voucher::class, function (Faker\Generator $faker) {
     
     return [
         'discount_tier_id' => $discounts->random(1)->first()->id,
-        'start_date' => $faker->dateTimeBetween('now', '+1 month'),
+        'start_date' => $faker->dateTimeBetween('-1 month', '+1 month'),
         'end_date' => $faker->dateTimeBetween('+2 month', '+5 month')
     ];
 });

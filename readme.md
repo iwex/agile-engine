@@ -1,51 +1,458 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+### Project setup
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+```bash
+composer install
+php vendor/bin/homestead make
+vagrant up
+vagrant ssh
+php artisan migrate --seed
+```
 
-## About Laravel
+Find your project url in `Homestead.yaml` and add it to `/etc/hosts`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Open project url in browser.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Samples
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+#### Products
+##### List
+`GET /api/products`
 
-## Learning Laravel
+Response:
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "veritatis quos",
+      "price": 594.88,
+      "vouchers": {
+        "data": [
+          {
+            "id": 1,
+            "start_date": 1493465008,
+            "end_date": 1499349942,
+            "discountTier": {
+              "data": {
+                "id": 2,
+                "percent": 15
+              }
+            }
+          },
+          {
+            "id": 2,
+            "start_date": 1493631057,
+            "end_date": 1506044850,
+            "discountTier": {
+              "data": {
+                "id": 1,
+                "percent": 10
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "porro eum",
+      "price": 536.62,
+      "vouchers": {
+        "data": [
+          {
+            "id": 3,
+            "start_date": 1495026269,
+            "end_date": 1505645294,
+            "discountTier": {
+              "data": {
+                "id": 1,
+                "percent": 10
+              }
+            }
+          },
+          {
+            "id": 4,
+            "start_date": 1494989692,
+            "end_date": 1504920610,
+            "discountTier": {
+              "data": {
+                "id": 3,
+                "percent": 20
+              }
+            }
+          }
+        ]
+      }
+    },
+    ...
+  ]
+}
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+#### Show one
+`GET /api/products/{product}`
 
-## Laravel Sponsors
+Response:
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "veritatis quos",
+    "price": 594.88,
+    "vouchers": {
+      "data": [
+        {
+          "id": 1,
+          "start_date": 1493465008,
+          "end_date": 1499349942,
+          "discountTier": {
+            "data": {
+              "id": 2,
+              "percent": 15
+            }
+          }
+        },
+        {
+          "id": 2,
+          "start_date": 1493631057,
+          "end_date": 1506044850,
+          "discountTier": {
+            "data": {
+              "id": 1,
+              "percent": 10
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- **[Codecourse](https://www.codecourse.com)**
-- [Fragrantica](https://www.fragrantica.com)
+#### Create
+`POST /api/products`
 
-## Contributing
+```json
+{
+  "name":"Candy",
+  "price" : "10.30"
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Response:
 
-## Security Vulnerabilities
+```json
+{
+  "data": {
+    "id": 11,
+    "name": "Candy",
+    "price": 10.3,
+    "vouchers": {
+      "data": []
+    }
+  }
+}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+#### Buy
 
-## License
+`POST /api/{product}/buy`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Response: `204`
+
+#### Bind vouchers
+
+`PATCH /api/{product}/vouchers`
+
+```json
+{
+  "voucher_ids": [1,2,3]
+}
+```
+
+Response: `204`
+
+#### UnBind vouchers
+
+`DELETE /api/{product}/vouchers`
+
+```json
+{
+  "voucher_ids": [1,2,3]
+}
+```
+
+Response: `204`
+
+### Vouchers
+#### List
+`GET /api/vouchers`
+
+Response:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "start_date": 1493465008,
+      "end_date": 1499349942,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 2,
+      "start_date": 1493631057,
+      "end_date": 1506044850,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 3,
+      "start_date": 1495026269,
+      "end_date": 1505645294,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 4,
+      "start_date": 1494989692,
+      "end_date": 1504920610,
+      "discountTier": {
+        "data": {
+          "id": 3,
+          "percent": 20
+        }
+      }
+    },
+    {
+      "id": 5,
+      "start_date": 1494886240,
+      "end_date": 1502471686,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 6,
+      "start_date": 1495348565,
+      "end_date": 1506385800,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 7,
+      "start_date": 1494249665,
+      "end_date": 1500268418,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 8,
+      "start_date": 1494328954,
+      "end_date": 1501450481,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 9,
+      "start_date": 1494818038,
+      "end_date": 1499499950,
+      "discountTier": {
+        "data": {
+          "id": 3,
+          "percent": 20
+        }
+      }
+    },
+    {
+      "id": 10,
+      "start_date": 1494124091,
+      "end_date": 1499410683,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 11,
+      "start_date": 1494087474,
+      "end_date": 1501670821,
+      "discountTier": {
+        "data": {
+          "id": 3,
+          "percent": 20
+        }
+      }
+    },
+    {
+      "id": 12,
+      "start_date": 1493805720,
+      "end_date": 1505303097,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 13,
+      "start_date": 1493615925,
+      "end_date": 1501952387,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 14,
+      "start_date": 1493303175,
+      "end_date": 1503819457,
+      "discountTier": {
+        "data": {
+          "id": 2,
+          "percent": 15
+        }
+      }
+    },
+    {
+      "id": 15,
+      "start_date": 1493444436,
+      "end_date": 1504675575,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 16,
+      "start_date": 1493519388,
+      "end_date": 1498540969,
+      "discountTier": {
+        "data": {
+          "id": 4,
+          "percent": 25
+        }
+      }
+    },
+    {
+      "id": 17,
+      "start_date": 1495169950,
+      "end_date": 1500990119,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    },
+    {
+      "id": 18,
+      "start_date": 1494902272,
+      "end_date": 1502443304,
+      "discountTier": {
+        "data": {
+          "id": 3,
+          "percent": 20
+        }
+      }
+    },
+    {
+      "id": 19,
+      "start_date": 1494026954,
+      "end_date": 1499851143,
+      "discountTier": {
+        "data": {
+          "id": 4,
+          "percent": 25
+        }
+      }
+    },
+    {
+      "id": 20,
+      "start_date": 1495182067,
+      "end_date": 1503452718,
+      "discountTier": {
+        "data": {
+          "id": 1,
+          "percent": 10
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 20,
+      "count": 20,
+      "per_page": 25,
+      "current_page": 1,
+      "total_pages": 1,
+      "links": []
+    }
+  }
+}
+```
+
+#### Create
+`POST /api/vouchers`
+
+```json
+{
+  "discount_tier_id": 1,
+  "start_date": "01-01-2017",
+  "end_date": "01-01-2018"
+}
+```
+
+Response
+```json
+{
+  "data": {
+    "id": 21,
+    "start_date": 1483228800,
+    "end_date": 1514764800,
+    "discountTier": {
+      "data": {
+        "id": 1,
+        "percent": 10
+      }
+    }
+  }
+}
+```

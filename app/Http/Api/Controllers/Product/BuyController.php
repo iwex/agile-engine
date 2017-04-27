@@ -4,7 +4,6 @@ namespace App\Http\Api\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Repositories\ProductRepository;
 
 class BuyController extends Controller
 {
@@ -14,11 +13,12 @@ class BuyController extends Controller
      * Buy product and make it inactive
      *
      * @param \App\Models\Product $product
-     * @param \App\Repositories\ProductRepository $productRepository
      *
      * @return \App\Http\Api\Responses\SuccessResponse
+     * @throws \Exception
+     * @throws \Throwable
      */
-    public function buy(Product $product, ProductRepository $productRepository)
+    public function buy(Product $product)
     {
         $product->buy();
         

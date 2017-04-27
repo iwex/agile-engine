@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Product::class, 100)->create()->each(
+        factory(Product::class, 10)->create()->each(
             function (Product $product) {
                 $product->vouchers()->saveMany(factory(Voucher::class, 2)->make());
             }

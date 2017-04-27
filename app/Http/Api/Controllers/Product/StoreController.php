@@ -2,7 +2,7 @@
 
 namespace App\Http\Api\Controllers\Product;
 
-use App\Http\Api\Requests\Voucher\StoreVoucherRequest;
+use App\Http\Api\Requests\Product\StoreProductRequest;
 use App\Http\Api\Responses\Transformers\ProductTransformer;
 use App\Http\Controllers\Controller;
 use App\Repositories\ProductRepository;
@@ -15,12 +15,12 @@ class StoreController extends Controller
      *
      * Create new product
      *
-     * @param \App\Http\Api\Requests\Voucher\StoreVoucherRequest $request
+     * @param \App\Http\Api\Requests\Product\StoreProductRequest $request
      * @param \App\Repositories\ProductRepository $productRepository
      *
      * @return \App\Http\Api\Responses\ArrayResponse
      */
-    public function store(StoreVoucherRequest $request, ProductRepository $productRepository)
+    public function store(StoreProductRequest $request, ProductRepository $productRepository)
     {
         $toSave  = $request->only('name', 'price');
         $product = $productRepository->create($toSave);

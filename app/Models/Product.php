@@ -103,7 +103,15 @@ class Product extends Model
     {
         return min(
             $this->maxDiscount,
-            $this->vouchers->sum->percent
+            $this->vouchers->sum(
+                function (Voucher $voucher) {
+                    if ($voucher->isExpired()) {
+                        return 0;
+                    }
+                    
+                    return $voucher->percent;
+                }
+            )
         );
     }
 }
